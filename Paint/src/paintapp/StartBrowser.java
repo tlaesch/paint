@@ -1,7 +1,7 @@
 package paintapp;
 
 // Taken from https://mkyong.com/java/open-browser-in-java-windows-or-linux/
-// Used this instead of trying to make my own since this seems to handle opening the browser on multiple platforms and seems to be more reliable than my own attempts
+// Used this instead of trying to make my own since this handles opening the browser on multiple platforms and seems to be more reliable than my own attempts
 
 public class StartBrowser {
 
