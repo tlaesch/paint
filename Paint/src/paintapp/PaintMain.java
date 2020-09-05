@@ -1,89 +1,63 @@
 package paintapp;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class PaintMain extends Application {
 	
+	// Constant list
+	static final int originX = 0;
+	static final int originY = 0;
+	static final int initW = 800;
+	static final int initH = 600;
+	static final String helpSite = "https://github.com/tlaesch/paint/blob/master/help.txt";
+	
+	// Things to be made available through getters
 	private static BorderPane root = new BorderPane();
-	private static VBox root2 = new VBox();
-	private static Stage primaryStage;
-	private static Scene scene;
-	private static File lastFile;
-	private static Image image;
+	private static ResizableCanvas canvas;
+	private static GraphicsContext gc;
 
 	@Override public void start(Stage primaryStage) {
 		primaryStage.setTitle("Paint");
 		
+		// Init menu bar and place it in the top portion of the border pane
 		TopMenuBar menubar = new TopMenuBar(primaryStage);
-		//root.setTop(menubar);
-		root2.getChildren().add(menubar);
+		root.setTop(menubar);
 		
-		Scene scene = new Scene(root2, 800, 600);
+		// Create a Scene with the border pane
+		Scene scene = new Scene(root, initW, initH);
+		
+		// Create a canvas and graphics context so we can draw on something
+		canvas = new ResizableCanvas(root.getWidth(),root.getHeight());
+		gc = canvas.getGraphicsContext2D();
+		
+		// Set the canvas to the center portion of the border pane
+		root.setCenter(canvas);
         
+		// Set the current scene and display it
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
 
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
-	public static void openFile(File file) {
-		
-		lastFile = file;
-		
-		ResizableCanvas canvas = new ResizableCanvas();
-		canvas.widthProperty().bind(root2.widthProperty());
-		canvas.heightProperty().bind(root2.heightProperty());
-		
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
-		image = new Image("file:"+file.getPath());
-		System.out.println("file:"+file.getPath());
-		gc.drawImage(image, 0, 0, image.getWidth(), image.getHeight());
-		root.setPrefSize(image.getWidth(), image.getHeight());
-		//root.setCenter(canvas);
-		root2.getChildren().add(canvas);
+	
+	// Get Functions
+	public static ResizableCanvas getCanvas() {
+		return canvas;
 	}
 	
-	public static void save() {
-		File outputFile = lastFile;
-	    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-	    try {
-	    	ImageIO.write(bImage, "png", outputFile);
-	    } catch (IOException e) {
-	    	throw new RuntimeException(e);
-	    }
+	public static GraphicsContext getGC() {
+		return gc;
 	}
 	
-	public static void refresh() {
-		if (lastFile != null) {
-			// todo
-		}
+	public static BorderPane getRoot() {
+		return root;
 	}
 }

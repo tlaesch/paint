@@ -1,35 +1,25 @@
 package paintapp;
-import javafx.application.Application;
-import javafx.scene.Scene;
+
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
  
 /**
- * Tip 1: A canvas resizing itself to the size of
- *        the parent pane.
+ * Tip 1: A canvas that can be resized.
  */
 public class ResizableCanvas extends Canvas {
-	public ResizableCanvas() {
+	public ResizableCanvas(double w, double h) {
+		super(w,h);
         // Redraw canvas when size changes.
-        widthProperty().addListener(evt -> PaintMain.refresh());
-        heightProperty().addListener(evt -> PaintMain.refresh());
+        widthProperty().addListener(evt -> canvasDraw.refresh());
+        heightProperty().addListener(evt -> canvasDraw.refresh());
     }
  
     @Override
     public boolean isResizable() {
         return true;
     }
- 
-    @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
- 
-    @Override
-    public double prefHeight(double width) {
-        return getHeight();
+    
+    public void setSize(double w, double h) {
+    	super.setWidth(w);
+    	super.setHeight(h);
     }
 }
